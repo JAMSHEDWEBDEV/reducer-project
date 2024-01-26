@@ -3,18 +3,17 @@ import AddTask from "./components/AddTask";
 import TaskList from "./components/TaskList";
 import { initialTasks } from "./data/tasks";
 
-export default function App() {
+const App = () => {
+
     const [tasks, setTasks] = useState(initialTasks);
 
-    const getNextId = (data) => {
-        const maxId = data.reduce((prev, current) =>
-            prev && prev > current.id ? prev : current.id, 0
-        );
+    const getNextId = (data) =>{
+        const maxId = data.reduce((prev,current)=> prev && prev.id > current.id ? prev.id : current.id );
 
         return maxId + 1;
-    };
-
-    // handlers
+    }
+    
+    // handler start 
     const handleAddTask = (text) => {
         setTasks([
             ...tasks,
@@ -22,37 +21,39 @@ export default function App() {
                 id: getNextId(tasks),
                 text: text,
                 done: false,
-            },
+            }
         ]);
-    };
+    }
 
-    const handleChangeTask = (task) => {
-        const nextTasks = tasks.map((t) => {
-            if (t.id === task.id) {
+    const handleChangeTask = (task) =>{
+        const nextTasks = tasks.map(t => {
+            if(t.id === task.id){
                 return task;
-            } else {
+            }else{
                 return t;
             }
-        });
-
+        })
         setTasks(nextTasks);
-    };
+    }
 
-    const handleDeleteTask = (taskId) => {
-        setTasks(tasks.filter((t) => t.id !== taskId));
-    };
+    const handleDelete = (taskId) => {
+        setTasks(tasks.filter(t => t.id !== taskId))
+    }
 
     return (
         <>
-            <h1>Prague itinerary</h1>
+           <h1>Prague itinerary</h1>
+           {/* Add Task  */}
+           <AddTask onAdd = {handleAddTask}/>
 
-            <AddTask onAdd={handleAddTask} />
-
-            <TaskList
-                tasks={tasks}
-                onChangeTask={handleChangeTask}
-                onDeleteTask={handleDeleteTask}
-            />
+           {/* task list  */}
+           <TaskList 
+           tasks={tasks} 
+           onChangeTask={handleChangeTask}
+           onDelete={handleDelete}
+           />
         </>
     );
-}
+};
+
+export default App;
